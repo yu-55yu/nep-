@@ -1,0 +1,17 @@
+[
+   {
+      "directory" : "D:/TIprojects/A20/Debug",
+      "command"   : "clang++ -D__MSPM0G3507__ -I\"D:/TIprojects/A20\" -I\"D:/TIprojects/A20/MyFunction\" -I\"D:/TIprojects/A20/Debug\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source/third_party/CMSIS/Core/Include\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source/third_party/CMSIS/DSP/Include\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/armv7em-ti-none-eabihf/c++/v1\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/c++/v1\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/lib/clang/15.0.7/include\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/c\"",
+      "file"      : "D:/TIprojects/A20/2021A.c"
+   },
+   {
+      "directory" : "D:/TIprojects/A20/Debug",
+      "command"   : "clang++ -D__MSPM0G3507__ -I\"D:/TIprojects/A20\" -I\"D:/TIprojects/A20/MyFunction\" -I\"D:/TIprojects/A20/Debug\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source/third_party/CMSIS/Core/Include\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source/third_party/CMSIS/DSP/Include\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/armv7em-ti-none-eabihf/c++/v1\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/c++/v1\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/lib/clang/15.0.7/include\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/c\"",
+      "file"      : "D:/TIprojects/A20/MyFunction/MyFunction.c"
+   },
+   {
+      "directory" : "D:/TIprojects/A20/Debug",
+      "command"   : "clang++ -D__MSPM0G3507__ -I\"D:/TIprojects/A20\" -I\"D:/TIprojects/A20/MyFunction\" -I\"D:/TIprojects/A20/Debug\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source/third_party/CMSIS/Core/Include\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source\" -I\"D:/TIsoftwares/mspm0_sdk_1_30_00_03/source/third_party/CMSIS/DSP/Include\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/armv7em-ti-none-eabihf/c++/v1\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/c++/v1\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/lib/clang/15.0.7/include\" -isystem\"D:/TIsoftwares/ccstheia140/ccs/tools/compiler/ti-cgt-armllvm_3.2.2.LTS/include/c\"",
+      "file"      : "D:/TIprojects/A20/Debug/ti_msp_dl_config.c"
+   }
+]
