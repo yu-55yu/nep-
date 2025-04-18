@@ -11,7 +11,7 @@
 #include "Delay.h"
 #ifndef _AD9910_H
 #define _AD9910_H
-
+#define DDS_CLK 1000000000
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
@@ -115,4 +115,7 @@ extern void AD9910_RAM_CON_RECIR_PHA_R(void);
 // void Par_mod(u8 des ,u16 FF);
 void AD9910_Init_Sin(int gain);
 void Freq_convert(u32 Freq);
+
+void  AD9910_ram_init(void);
+void Set_Freq(float Freq);
 #endif

@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32H743xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;../AD9910;../MyFunction;..\SI5351;..\AD9910;..\Delay</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc;../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32H7xx/Include;../Drivers/CMSIS/Include;..\MyAD9910</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -527,67 +527,12 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>MyFunction</GroupName>
+          <GroupName>MyAD9910</GroupName>
           <Files>
             <File>
-              <FileName>MyFunction.c</FileName>
+              <FileName>MyAD9910.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\MyFunction\MyFunction.c</FilePath>
-            </File>
-            <File>
-              <FileName>MyFunction.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\MyFunction\MyFunction.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>SI5351</GroupName>
-          <Files>
-            <File>
-              <FileName>SI5351.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SI5351\SI5351.c</FilePath>
-            </File>
-            <File>
-              <FileName>SI5351.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SI5351\SI5351.h</FilePath>
-            </File>
-            <File>
-              <FileName>Si5351A-RevB-Registers.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\SI5351\Si5351A-RevB-Registers.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>AD9910</GroupName>
-          <Files>
-            <File>
-              <FileName>AD9910.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\AD9910\AD9910.c</FilePath>
-            </File>
-            <File>
-              <FileName>AD9910.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\AD9910\AD9910.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Delay</GroupName>
-          <Files>
-            <File>
-              <FileName>Delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Delay\Delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>Delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\Delay\Delay.h</FilePath>
+              <FilePath>..\MyAD9910\MyAD9910.c</FilePath>
             </File>
           </Files>
         </Group>

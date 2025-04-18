@@ -23,9 +23,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "AD9910.h"
-#include "SI5351.h"
-#include "MyFunction.h"
+#include "MyAD9910.h"
+
+
 
 /* USER CODE END Includes */
 
@@ -91,18 +91,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  Si5351_Init();
-	AD9910_Init();
-	AD9910_RAM_Init();																							
-	AD9910_RAM_ZB_Fre_Init();                                       
-	AD9910_RAM_ZB_Fre_Set(0);                                       
-  //  AD9910_WAVE_RAM_AMP_W(3);
-  // AD9910_RAM_CON_RECIR_AMP_R();
+
+	AD9910_Init();		
+  AD9910_RAM_PLO_WAVE_Set(SINC_WAVE);
+
+	// AD9910_RAM_ZB_Fre_Init();                                       
+	// AD9910_RAM_ZB_Fre_Set(0);                                       
 
 
+//   AD9910_ram_init();
+// Set_Freq(1000);
 
 
-   AD9910_Freq_W(1000);
+  //  AD9910_Freq_W(1000);
   // AD9910_RAM_Fre_W();
   // AD9910_RAM_DIR_Fre_R();
   //Set_Profile(0);

@@ -1,5 +1,5 @@
-ad9910_h743/si5351.o: ..\SI5351\SI5351.c ..\SI5351\si5351.h \
-  ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \
+ad9910_h743/myad9910.o: ..\MyAD9910\MyAD9910.c ..\MyAD9910\MyAD9910.h \
+  ..\Core\Inc\main.h ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal.h \
   ..\Core\Inc\stm32h7xx_hal_conf.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_rcc.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_def.h \
@@ -23,5 +23,4 @@ ad9910_h743/si5351.o: ..\SI5351\SI5351.c ..\SI5351\si5351.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_i2c_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr_ex.h \
-  ..\Core\Inc\main.h ..\Delay\Delay.h ..\AD9910\AD9910.h \
-  ..\SI5351\Si5351A-RevB-Registers.h
+  ..\Core\Inc\memorymap.h ..\Core\Inc\gpio.h

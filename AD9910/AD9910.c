@@ -1564,15 +1564,22 @@ void AD9910_WAVE_RAM_AMP_W(int mode)
 			Write_32bit(RAM_AMP_SQUARE_WAVE[j]);														//将方波的数据写入ram
 		}
 	}
-		AD9910_CSN_Set;
+	AD9910_CSN_Set;
 	
+	AD9910_CSN_Clr;
+    Write_8bit(0x00);																																// 将CFR1写入其地址0x00
+    CFR1[0] |= 0X80; //使能RAM
+    for(j = 0; j < 4; j++)
+        Write_8bit(CFR1[j]);
+   AD9910_CSN_Set;
+
 		AD9910_IUP_Clr;
 		Delay_ns (10);																									// 更新AD9910
 		AD9910_IUP_Set;
 		Delay_ns (10);
 		AD9910_IUP_Clr;
 		Delay_ns (10);
-	 
+		AD9910_CSN_Clr; 	 
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------
@@ -2719,12 +2726,22 @@ void AD9910_RAM_CON_RECIR_Fre_R(void)
 //入口参数:无
 //出口参数:无
 //---------------------------------------------------------------------------------------------------------------------------------
+void SPI_Refresh(void)
+{
+	AD9910_IUP_Clr;
+	Delay_ns (100);																									// 更新AD9910
+	AD9910_IUP_Set;
+	Delay_ns (100);
+	AD9910_IUP_Clr;
+	Delay_ns (100);
+}
+
 void AD9910_RAM_CON_RECIR_AMP_R(void)
 {
 	int j;
 	u8 CFR1[]={0xE0,0x40,0x00,0x00};																								// 使能RAM模式  将回放目的位设为“10” 回放幅度 （注：使能后就变成了RAM寄存器了）
 	
-	u8 RAM_PRO0[]={0x00,0x00,0x01,0xff,0xc0,0x00,0x00,0x04};												//	从地址0回放到1023					// 连续双向斜坡模式RAM_PROx[7]=0x04
+	u8 RAM_PRO0[]={0x00,0x00,0x4d,0xff,0xc0,0x00,0x00,0x04};												//	从地址0回放到1023					// 连续双向斜坡模式RAM_PROx[7]=0x04
 //00000000 000000000 000000001 11111111 11000000 00000000 00000000 00000100
 //        0		             511      	  192 		0 		 0 		  4
 	//63       55       47      39         31       23      15        7
@@ -2981,3 +2998,125 @@ void AD9910_Init_Sin(int gain)
 // 	GPIOC->ODR = (Data[1] & 0x3F3F)|( Temp[0] & 0xC0C0);
 // //	AD9910_TE_Clr;
 // }
+
+void  AD9910_ram_init(void)
+{
+	int j;
+    u8 CFR1[]={0x00,0x40,0x00,0x00};
+	u8 CFR2[]={0x01,0x40,0x08,0x20};
+	u8 PRO[] = {0x3f, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    u8 FTW[]={0x00,0x00,0x00,0x00};						// 频率寄存器FTW的初始值
+
+    //初始化RAM
+    AD9910_CSN_Clr;
+	Write_8bit(0x00);														// 将CFR1写入其寄存器0x00
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(CFR1[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x01);														// 将CFR2写入其寄存器0x01
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(CFR2[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x0e);														// 将RAM Profile0写入其寄存器0x0e
+	for(j=0;j<8;j++)
+	{
+		Write_8bit(PRO[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+
+	AD9910_IUP_Clr;															// 更新AD9910
+	Delay_ns (10);
+	AD9910_IUP_Set;
+	Delay_ns (10);
+	AD9910_IUP_Clr;
+
+}
+
+
+void Set_Freq(float Freq)
+{
+	int j;
+	u8 CFR1[]={0x00,0x40,0x00,0x00};						
+	u8 RAM_PRO0[]={0x00,0x00,0x01,0xff,0xc0,0x00,0x00,0x00};					// 设置RAM的起始和终止地址、地址步进率
+    CFR1[0]= 0x60;															// 开启AD9910反Sinc滤波
+    AD9910_CSN_Clr;
+	Write_8bit(0x00);																									// 将CFR1写入其寄存器0x00
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(CFR1[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x0e);																
+	for(j=0;j<8;j++)
+	{
+		Write_8bit(RAM_PRO0[j]);																				// 将RAM的起始和终止地址、地址步进率写入相应的寄存器  0x0e
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+	AD9910_IUP_Clr;																										// 更新AD9910
+	Delay_ns (10);
+	AD9910_IUP_Set;
+	Delay_ns (10);
+	AD9910_IUP_Clr;
+	Delay_ns (10);
+													// 更新AD9910
+	AD9910_CSN_Clr;
+	Write_8bit(0x16);
+	for(j=0; j<1024; j++)
+	{	
+        Write_32bit(RAM_AMP_SQUARE_WAVE[j]);														//将方波的数据写入ram
+	}
+	AD9910_CSN_Set;
+    AD9910_IUP_Clr;
+    Delay_ns (10);																									// 更新AD9910
+    AD9910_IUP_Set;
+    Delay_ns (10);
+    AD9910_IUP_Clr;
+    Delay_ns (10);
+    //回放
+    CFR1[0]=0xE0;																								// 使能RAM模式  将回放目的位设为“10” 回放幅度 （注：使能后就变成了RAM寄存器了）
+	uint32_t FreqWord = (uint32_t)(DDS_CLK/4.0/1024.0/Freq);	// 计算频率调谐字
+	CFR1[0] = 0xe0;
+	RAM_PRO0[1] = (FreqWord >> 8) & 0xFF;	
+	RAM_PRO0[2] = FreqWord  & 0xFF;		
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x00);																																// 将CFR1写入其地址0x00															
+	for(j=0;j<4;j++)                                                                
+	{                                                                               
+		Write_8bit(CFR1[j]);                                                          
+	}                                                                               
+	AD9910_CSN_Set;	                                                                
+	Delay_ns (10);                  // 写入CFR1寄存器
+	
+    AD9910_CSN_Clr;                                                                 
+	Write_8bit(0x0e);																                                // 将RAM_RPOx写入其地址		
+	for(j=0;j<8;j++)                                                                
+	{                                                                               
+		Write_8bit(RAM_PRO0[j]);                                                      
+	}                                                                               
+	AD9910_CSN_Set;	                                                                
+	Delay_ns (10); 
+	
+	AD9910_IUP_Clr;                                                                 
+	Delay_ns (10);                                                                  
+	AD9910_IUP_Set;                                                                 
+	Delay_ns (10);                                                                  // 更新AD9910
+	AD9910_IUP_Clr;
+	Delay_ns (10);
+}

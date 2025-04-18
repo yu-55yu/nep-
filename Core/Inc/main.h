@@ -28,10 +28,9 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
-#include "Delay.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "AD9910.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

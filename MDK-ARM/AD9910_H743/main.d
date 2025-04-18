@@ -23,5 +23,4 @@ ad9910_h743/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_i2c_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr_ex.h \
-  ..\Delay\Delay.h ..\AD9910\AD9910.h ..\Core\Inc\memorymap.h \
-  ..\Core\Inc\gpio.h ..\SI5351\SI5351.h ..\MyFunction\MyFunction.h
+  ..\Core\Inc\memorymap.h ..\Core\Inc\gpio.h ..\MyAD9910\MyAD9910.h

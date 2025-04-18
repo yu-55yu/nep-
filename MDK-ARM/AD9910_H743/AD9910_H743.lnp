@@ -24,10 +24,7 @@
 "ad9910_h743\stm32h7xx_hal_tim.o"
 "ad9910_h743\stm32h7xx_hal_tim_ex.o"
 "ad9910_h743\system_stm32h7xx.o"
-"ad9910_h743\myfunction.o"
-"ad9910_h743\si5351.o"
-"ad9910_h743\ad9910.o"
-"ad9910_h743\delay.o"
+"ad9910_h743\myad9910.o"
 --strict --scatter "AD9910_H743\AD9910_H743.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

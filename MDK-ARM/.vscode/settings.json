@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "ad9910.h": "c"
+        "ad9910.h": "c",
+        "delay.h": "c",
+        "myad9910.h": "c",
+        "si5351.h": "c",
+        "main.h": "c"
     }
 }
