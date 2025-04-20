@@ -2,7 +2,9 @@
 "ad9910_h743\startup_stm32h743xx.o"
 "ad9910_h743\main.o"
 "ad9910_h743\gpio.o"
+"ad9910_h743\dma.o"
 "ad9910_h743\memorymap.o"
+"ad9910_h743\usart.o"
 "ad9910_h743\stm32h7xx_it.o"
 "ad9910_h743\stm32h7xx_hal_msp.o"
 "ad9910_h743\stm32h7xx_hal_cortex.o"
@@ -23,8 +25,12 @@
 "ad9910_h743\stm32h7xx_hal_exti.o"
 "ad9910_h743\stm32h7xx_hal_tim.o"
 "ad9910_h743\stm32h7xx_hal_tim_ex.o"
+"ad9910_h743\stm32h7xx_hal_uart.o"
+"ad9910_h743\stm32h7xx_hal_uart_ex.o"
 "ad9910_h743\system_stm32h7xx.o"
 "ad9910_h743\myad9910.o"
+"ad9910_h743\si5351.o"
+"ad9910_h743\myfunction.o"
 --strict --scatter "AD9910_H743\AD9910_H743.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

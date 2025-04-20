@@ -31,14 +31,10 @@
 #define XTAL_FREQ	25000000+XTAL_FREQ_deviation	// Crystal frequency
 //-3100 误差校正 0.00023
 
-#define Si5351_SDA_GPIO_Port GPIOB
-#define Si5351_SDA_Pin GPIO_PIN_6
-#define Si5351_CLK_GPIO_Port GPIOB
-#define Si5351_CLK_Pin GPIO_PIN_7
-//IIC总线引脚配置
 
-#define SDA(n) {n?HAL_GPIO_WritePin(Si5351_SDA_GPIO_Port,Si5351_SDA_Pin,GPIO_PIN_SET):HAL_GPIO_WritePin(Si5351_SDA_GPIO_Port,Si5351_SDA_Pin,GPIO_PIN_RESET);}
-#define CLK(n) {n?HAL_GPIO_WritePin(Si5351_CLK_GPIO_Port,Si5351_CLK_Pin,GPIO_PIN_SET):HAL_GPIO_WritePin(Si5351_CLK_GPIO_Port,Si5351_CLK_Pin,GPIO_PIN_RESET);}
+
+#define CLK(n) {n?HAL_GPIO_WritePin(SCL_GPIO_Port,SCL_Pin,GPIO_PIN_SET):HAL_GPIO_WritePin(SCL_GPIO_Port,SCL_Pin,GPIO_PIN_RESET);}
+#define SDA(n) {n?HAL_GPIO_WritePin(SDA_GPIO_Port,SDA_Pin,GPIO_PIN_SET):HAL_GPIO_WritePin(SDA_GPIO_Port,SDA_Pin,GPIO_PIN_RESET);}
 //相关函数声明
 void SetPLLClk(uint8_t pll, uint8_t mult, uint32_t num, uint32_t denom);//设置PPL时钟
 void SetFrequency(uint32_t frequency,uint8_t div,uint8_t Channel);//时钟Si5351时钟频率

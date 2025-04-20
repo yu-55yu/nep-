@@ -18,14 +18,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "memorymap.h"
+#include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "MyAD9910.h"
-
-
+#include "MyFunction.h"
+#include "SI5351.h"
 
 /* USER CODE END Includes */
 
@@ -36,7 +37,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define maxlen 20
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -47,7 +48,8 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+uint8_t rx_buffer[maxlen]={0}; // 接收缓冲区
+uint8_t rx_flag = 0; // 接收标志位
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -90,31 +92,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+
   /* USER CODE BEGIN 2 */
 
-	AD9910_Init();		
-  AD9910_RAM_PLO_WAVE_Set(SINC_WAVE);
-
-	// AD9910_RAM_ZB_Fre_Init();                                       
-	// AD9910_RAM_ZB_Fre_Set(0);                                       
-
-
-//   AD9910_ram_init();
-// Set_Freq(1000);
-
-
-  //  AD9910_Freq_W(1000);
-  // AD9910_RAM_Fre_W();
-  // AD9910_RAM_DIR_Fre_R();
-  //Set_Profile(0);
-	//AD9910_WAVE_RAM_AMP_W(2);                                       
-  // AD9910_RAM_CON_RECIR_AMP_R();                                   
-	
-	
-	// AD9910_Singal_Profile_Init();																	 
-	// AD9910_Singal_Profile_Set(0, 1000, 0xC8, 0);									 
-	
-
+ 
+	AD9910_Init();
+   //AD9910_RAM_PLO_WAVE_Set(SINC_WAVE);
+  AD9910_PWM_Wave_Set(1,100,22,30000);				 
+  MX_DMA_Init();
+  MX_USART3_UART_Init();
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart3, rx_buffer, maxlen); // 开启一次中断接收
 	
   /* USER CODE END 2 */
 
@@ -122,6 +109,17 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    if(rx_flag == 1)
+    {
+      rx_flag = 0;
+      if (rx_buffer[0] == 0x01)
+      {
+        uint32_t num = 0;
+        num = ExtractNumberFromUART(rx_buffer, maxlen);
+        printf("%d\n", num);
+      }
+      ClearUARTBuffer(rx_buffer,maxlen);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -194,7 +192,14 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) // 中断接收回调函数
+{
+  if (huart->Instance == USART3) // 判断串口
+  {
+    rx_flag = 1;                                              // 标志位置1
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart3, rx_buffer, maxlen); // 开启一次中断接收
+  }
+}
 /* USER CODE END 4 */
 
 /**

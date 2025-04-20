@@ -1,9 +1,12 @@
 #include "main.h"
 #include "memorymap.h"
 #include "gpio.h"
+#include "si5351.h"
 typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
+
+
 #define AD9910_MRT_Set HAL_GPIO_WritePin(MRT_GPIO_Port, MRT_Pin, GPIO_PIN_SET)
 #define AD9910_MRT_Clr HAL_GPIO_WritePin(MRT_GPIO_Port, MRT_Pin, GPIO_PIN_RESET)
 

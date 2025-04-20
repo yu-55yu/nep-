@@ -1,2 +1,4 @@
-Load "AD9910_H743\\AD9910_H743.axf" 
-Erase Done.Programming Done.Verify OK.Flash Load finished at 22:11:14
+*** Using Compiler 'V6.22', folder: 'D:\STM32softwore\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'AD9910_H743'
+"AD9910_H743\AD9910_H743.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:01

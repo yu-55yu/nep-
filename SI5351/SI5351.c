@@ -3,7 +3,7 @@
  uint8_t Div;
  uint8_t Multi;
  
- 
+extern uint32_t DDS_CLK;
  
  
 #define SYSCLK 480   //输入10  测试得出是48Khz
@@ -224,3 +224,38 @@ void SetFrequencyDiv(uint32_t Frequency,uint8_t Channel)
   }
   SetFrequency(Frequency*Multi,Div,Channel);
 }
+// void SetFrequencyDiv(uint32_t Frequency,uint8_t Channel)
+// {
+//   if(Frequency > 100000000) {
+//     Div = SI_R_DIV_1;
+//     Multi = 1;
+//   } else if(Frequency > 50000000 && Frequency <= 100000000){
+//     Div = SI_R_DIV_1;
+//     Multi = 1;
+//   } else if(Frequency > 25000000 && Frequency <= 50000000){
+//     Div = SI_R_DIV_2;
+//     Multi = 2;
+//   } else if(Frequency > 12500000 && Frequency <= 25000000){
+//     Div = SI_R_DIV_4;
+//     Multi = 4;
+//   } else if(Frequency > 6250000 && Frequency <= 12500000){
+//     Div = SI_R_DIV_8;
+//     Multi = 8;
+//   } else if(Frequency > 3125000 && Frequency <= 6250000){
+//     Div = SI_R_DIV_16;
+//     Multi = 16;
+//   } else if(Frequency > 1562500 && Frequency <= 3125000){
+//     Div = SI_R_DIV_32;
+//     Multi = 32;
+//   } else if(Frequency > 781250 && Frequency <= 1562500){
+//     Div = SI_R_DIV_64;
+//     Multi = 64;
+//   } else if(Frequency >= 8 && Frequency <= 781250){
+//     Div = SI_R_DIV_128;
+//     Multi = 128;
+//   } else {
+//     return; // 非法频率，直接返回
+//   }
+
+//   SetFrequency(Frequency * Multi, Div, Channel);
+// }

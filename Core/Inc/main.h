@@ -28,9 +28,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32h7xx_hal.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+extern DMA_HandleTypeDef hdma_usart1_rx;
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -78,10 +80,10 @@ void Error_Handler(void);
 #define CSN_GPIO_Port GPIOG
 #define MRT_Pin GPIO_PIN_5
 #define MRT_GPIO_Port GPIOG
-#define IIC_SCL_Pin GPIO_PIN_6
-#define IIC_SCL_GPIO_Port GPIOB
-#define IIC_SDA_Pin GPIO_PIN_7
-#define IIC_SDA_GPIO_Port GPIOB
+#define SCL_Pin GPIO_PIN_6
+#define SCL_GPIO_Port GPIOB
+#define SDA_Pin GPIO_PIN_7
+#define SDA_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

@@ -23,4 +23,6 @@ ad9910_h743/myad9910.o: ..\MyAD9910\MyAD9910.c ..\MyAD9910\MyAD9910.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_i2c_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_pwr_ex.h \
-  ..\Core\Inc\memorymap.h ..\Core\Inc\gpio.h
+  ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart.h \
+  ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h \
+  ..\Core\Inc\memorymap.h ..\Core\Inc\gpio.h ..\SI5351\si5351.h
