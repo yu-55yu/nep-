@@ -123,7 +123,7 @@ void Find_WaveAmp(void)
     double VoltTemp = 0;
     for(int i =0;i<ADC_LEN;i++)
     {
-        Volt_Buffer[i]=ADC_Buffer[i]*3.3/65535;
+        Volt_Buffer[i]=ADC_Buffer[i]*3.0/65535;
         if (Volt_Buffer[i] > HighV) {
             HighV = Volt_Buffer[i];
         }

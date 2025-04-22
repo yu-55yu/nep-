@@ -72,7 +72,7 @@ int DUTY = 50;
 float AMP = 718;
 extern float W;
 extern double Volt;
-
+extern double HighV,LowV;
 #define ADC_LEN 1024
 extern uint16_t ADC_Buffer[];
 extern double Volt_Buffer[];
@@ -254,8 +254,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) // ÷–∂
     }
 		if(rx_buffer[0]==0xEE)//∞¥œ¬œÚ…œªÚœÚœ¬…®∆µ
     {
-      W = 11*AMP*Volt/15;
-			printf("page1.t2.txt=\"%.2fW\"\xff\xff\xff",W);
+      W = 3*AMP*(HighV - LowV)/15/56;
+			printf("page1.t2.txt=\"%.3fW\"\xff\xff\xff",W);
     }
 		     
 

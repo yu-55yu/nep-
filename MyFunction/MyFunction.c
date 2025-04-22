@@ -151,11 +151,11 @@ void AD9910_Wave_Set(uint8_t WaveType,float freq,int Duty,float amp)
 		{
 			if(i<DutyWord)
 			{
-				Write_32bit(0x00000003 | (AmpWord<<2));
+				Write_32bit(0x7fff0003| (AmpWord<<2));
 			}
 			else
 			{
-				Write_32bit(0x7fff0003| (AmpWord<<2));
+				Write_32bit(0x00000003 | (AmpWord<<2));	
 			}
 		}
 		else
