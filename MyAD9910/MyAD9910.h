@@ -67,5 +67,7 @@ void AD9910_RAM_AMP_WAVE_Set(AD9910_WAVE_ENUM wave);
 void AD9910_RAM_PLO_WAVE_Set(AD9910_WAVE_ENUM wave);
 //设置AD9910,RAM极性模式，向AD9910芯片内部RAM写入1024个点的波形数据，使模块可输出任意波形
 //但是输出的幅值只有0-720mV左右
+void AD9910_INIT(void);
+void AD9910_RAM_Init(void);
 void AD9910_RAM_ZB_Fre_Init(void);
 void AD9910_RAM_ZB_Fre_Set(u32 Freq);

@@ -18,8 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
 #include "dma.h"
 #include "memorymap.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -27,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "MyFunction.h"
 #include "SI5351.h"
+#include "ADCFunction.h"
 
 /* USER CODE END Includes */
 
@@ -57,16 +60,22 @@ uint8_t StepFlag = 0; // ≤ΩΩ¯¬ ±Í÷æŒª
 uint8_t StepRateFlag = 0; //  «∑ÒΩ¯––…®∆µ±Í÷æŒª
 uint8_t SquareStepRate[3];
 uint8_t SineStepRate[3];
+uint8_t ADCIRQflag = 0;
 uint8_t IRQflag = 0;
+extern volatile uint8_t ChangeSamp;
 //012∑Ω≤® 345’˝œ“≤®
 
 
 uint8_t WAVETYPE = 1;
 float FREQ = 2000;
 int DUTY = 50;
-float AMP = 65535;
+float AMP = 718;
+extern float W;
+extern double Volt;
 
-
+#define ADC_LEN 1024
+extern uint16_t ADC_Buffer[];
+extern double Volt_Buffer[];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -111,13 +120,20 @@ int main(void)
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART3_UART_Init();
+  MX_TIM3_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
  
 	AD9910_Init();
- // AD9910_RAM_PLO_WAVE_Set(SINC_WAVE);
-   //AD9910_Wave_Set(WAVETYPE,FREQ,DUTY,AMP);				 
-	 AD9910_Wave_Set(1,2000,50,65535);
+  //AD9910_RAM_PLO_WAVE_Set(SINC_WAVE);
+  //AD9910_Wave_Set(WAVETYPE,FREQ,DUTY,AMP);				 
+	AD9910_Wave_Set(0,2000,50,718);
   HAL_UARTEx_ReceiveToIdle_DMA(&huart3, rx_buffer, maxlen); // ø™∆Ù“ª¥Œ÷–∂œΩ” ’
+	
+  HAL_TIM_Base_Start(&htim3);
+	HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)ADC_Buffer,ADC_LEN);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -142,6 +158,12 @@ int main(void)
       StepRateFlag = 0;
       AD9910_Wave_Sweep();
     }
+    if(ADCIRQflag ==1)
+    {
+
+       ChangeSamplingTime();
+    }
+		
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -176,17 +198,16 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_DIV1;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 60;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 5;
+  RCC_OscInitStruct.PLL.PLLN = 192;
   RCC_OscInitStruct.PLL.PLLP = 2;
   RCC_OscInitStruct.PLL.PLLQ = 2;
   RCC_OscInitStruct.PLL.PLLR = 2;
-  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_3;
+  RCC_OscInitStruct.PLL.PLLRGE = RCC_PLL1VCIRANGE_2;
   RCC_OscInitStruct.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
   RCC_OscInitStruct.PLL.PLLFRACN = 0;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -231,6 +252,12 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) // ÷–∂
     {
       StepRateFlag = 1; // …®∆µ±Í÷æŒª÷√1
     }
+		if(rx_buffer[0]==0xEE)//∞¥œ¬œÚ…œªÚœÚœ¬…®∆µ
+    {
+      W = 11*AMP*Volt/15;
+			printf("page1.t2.txt=\"%.2fW\"\xff\xff\xff",W);
+    }
+		     
 
     HAL_UARTEx_ReceiveToIdle_DMA(&huart3, rx_buffer, maxlen); // ø™∆Ù“ª¥Œ÷–∂œΩ” ’
   }

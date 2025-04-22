@@ -1,5 +1,5 @@
 #include "MyAD9910.h"
-
+u8 Assist_DAC[]={0x00,0x00,0x00,0x7F};	
 u8 CFR1[] = {0x00, 0x40, 0x00, 0x00}; // cfr1控制字
 u8 CFR2[] = {0x01, 0x00, 0x00, 0x00}; // cfr2控制字
 u8 CFR3[] = {0x05, 0x0F, 0x41, 0x50}; // cfr3控制字，凌智电子是25M输入，需要40倍频，康威是40M输入，需要25倍频
@@ -926,3 +926,83 @@ void AD9910_RAM_ZB_Fre_Set(u32 Freq)
 		Delay_ns (10);
 		AD9910_IUP_Clr;
 }
+
+
+
+
+
+void AD9910_INIT(void)																							 
+{
+	int j;
+	AD9910_MRT_Set;																	// MRT置1
+	AD9910_MRT_Clr;																	// MRT置0     复位AD9910
+	
+	AD9910_CSN_Clr;																	// CSN置0			开片选
+	Write_8bit(0x02);																// 选择0x02地址            CFR3寄存器写入数据		CFR3是控制时钟倍频之类的寄存器   
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(CFR3[j]);
+	}
+	AD9910_CSN_Set;																	// CSN置1			关片选
+	Delay_ns (10);
+	
+	AD9910_CSN_Clr;																	// CSN置0			开片选
+	Write_8bit(0x03);																// 选择0x03地址            辅助DAC控制写入数据	 控制DAC输出的幅度														
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(Assist_DAC[j]);
+	}
+	AD9910_CSN_Set;																	// CSN置1			关片选
+	
+	Delay_ns (10);
+	AD9910_IUP_Clr;																	// 更新AD9910输出
+	Delay_ns (10);
+	AD9910_IUP_Set;
+	Delay_ns (10);
+	AD9910_IUP_Clr;
+}
+
+void AD9910_RAM_Init(void)
+{
+	int j;
+	
+	u8 CFR1[]={0x00,0x40,0x00,0x00};
+	u8 CFR2[]={0x01,0x40,0x08,0x20};
+	u8 PRO[] = {0x3f, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x00);														// 将CFR1写入其寄存器0x00
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(CFR1[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x01);														// 将CFR2写入其寄存器0x01
+	for(j=0;j<4;j++)
+	{
+		Write_8bit(CFR2[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+	AD9910_CSN_Clr;
+	Write_8bit(0x0e);														// 将RAM Profile0写入其寄存器0x0e
+	for(j=0;j<8;j++)
+	{
+		Write_8bit(PRO[j]);
+	}
+	AD9910_CSN_Set;	
+	Delay_ns (10);
+	
+
+	
+	AD9910_IUP_Clr;															// 更新AD9910
+	Delay_ns (10);
+	AD9910_IUP_Set;
+	Delay_ns (10);
+	AD9910_IUP_Clr;
+}
+

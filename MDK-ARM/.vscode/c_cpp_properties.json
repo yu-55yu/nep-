@@ -11,6 +11,7 @@
                 "c:\\Users\\Saki\\Desktop\\第三次训练题\\DDS2\\MyAD9910",
                 "c:\\Users\\Saki\\Desktop\\第三次训练题\\DDS2\\MyFunction",
                 "c:\\Users\\Saki\\Desktop\\第三次训练题\\DDS2\\SI5351",
+                "c:\\Users\\Saki\\Desktop\\第三次训练题\\DDS2\\ADCFunction",
                 "D:\\STM32softwore\\Keil_v5\\ARM\\ARMCLANG\\include",
                 "D:\\STM32softwore\\Keil_v5\\ARM\\ARMCLANG\\include\\arm_linux",
                 "D:\\STM32softwore\\Keil_v5\\ARM\\ARMCLANG\\include\\arm_linux_compat",
@@ -22,6 +23,7 @@
             "defines": [
                 "USE_HAL_DRIVER",
                 "STM32H743xx",
+                "ARM_MATH_CM7",
                 "__alignof__(x)=",
                 "__asm(x)=",
                 "__asm__(x)=",

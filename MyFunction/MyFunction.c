@@ -16,7 +16,6 @@ extern uint8_t SquareStepRate[3];
 extern uint8_t SineStepRate[3];
 extern uint8_t IRQflag;
 
-
 //------------------中间函数 别管-----------------------------------------------------------------------------------------------------
 
 //设置SI5351 匹配频率
@@ -80,19 +79,19 @@ void Set_StepRate(void)
 }
 
 
-//设置AD9910的波形类型、频率、幅度(0到65535)和占空比
+//设置AD9910的波形类型、频率、幅度(0到16383)和占空比
 void AD9910_Wave_Set(uint8_t WaveType,float freq,int Duty,float amp)
 {
 	if(WaveType == 1)
 	{
 		printf("page2.t6.txt=\"%dHz\"\xff\xff\xff",(int)freq);
 		printf("page2.t8.txt=\"%d%%\"\xff\xff\xff",(int)Duty);
-		printf("page2.t7.txt=\"%d\"\xff\xff\xff",(int)amp);
+		printf("page2.t7.txt=\"%dmV\"\xff\xff\xff",(int)amp);
 	}
 	else
 	{
 		printf("page1.t6.txt=\"%dHz\"\xff\xff\xff",(int)freq);
-		printf("page1.t7.txt=\"%d\"\xff\xff\xff",(int)amp);
+		printf("page1.t7.txt=\"%dmV\"\xff\xff\xff",(int)amp);
 	}
 	
 	Set_DDS_CLK(freq);
@@ -134,7 +133,7 @@ void AD9910_Wave_Set(uint8_t WaveType,float freq,int Duty,float amp)
   AD9910_IUP_Clr;
 
 //幅度---------------------------------------------------------------------
-  uint16_t AmpWord = (uint32_t)(amp);
+  uint16_t AmpWord = (uint32_t)(amp*22.8175);
 	int DutyWord = (int)Duty/100.0*1024;
 //------------------------------------------------------------------
 
@@ -152,17 +151,20 @@ void AD9910_Wave_Set(uint8_t WaveType,float freq,int Duty,float amp)
 		{
 			if(i<DutyWord)
 			{
-				Write_32bit(0x00000000 | AmpWord);
+				Write_32bit(0x00000003 | (AmpWord<<2));
 			}
 			else
 			{
-				Write_32bit(0x7fff0000| AmpWord);
+				Write_32bit(0x7fff0003| (AmpWord<<2));
 			}
 		}
 		else
 		{
 			uint32_t high16 = srcWaveDta[i] & 0xFFFF0000;
-			uint16_t low16 = (srcWaveDta[i] & 0x0000FFFF)*(AmpWord/65535.0);
+			uint16_t raw14 = (srcWaveDta[i] & 0xFFFC) >> 2; // 提取前14位（舍弃低2位）
+			uint16_t scaled14 = (uint16_t)(raw14 * (AmpWord / 16383.0)); // 缩放
+			uint16_t low16 = (scaled14 << 2) | (srcWaveDta[i] & 0x0003); // 恢复低两位
+
 			Write_32bit(high16 | low16);
 		}
      
@@ -256,7 +258,7 @@ void AD9910_Wave_Sweep(void)
 
   if (rx_buffer[1]%6==2||rx_buffer[1]%6==3) 
   {
-    AMP+= Direction*StepRate[1]*4; // 幅度步进
+    AMP+= Direction*StepRate[1]; // 幅度步进
   }
   else if (rx_buffer[1]%6==4||rx_buffer[1]%6==5) 
   {
@@ -299,7 +301,8 @@ void ProcessData(void)
     {
       DUTY = parse_serial_data(rx_buffer);  // 从数据包中解析占空比
     }
-    AD9910_Wave_Set(WAVETYPE, FREQ, DUTY, AMP);
+      AD9910_Init(); // 初始化AD9910
+			AD9910_Wave_Set(WAVETYPE, FREQ, DUTY, AMP);
   
 }
 

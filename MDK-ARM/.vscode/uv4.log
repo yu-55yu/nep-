@@ -1,2 +1,8 @@
-Load "DDS2\\DDS2.axf" 
-Erase Done.Programming Done.Verify OK.Flash Load finished at 21:42:28
+*** Using Compiler 'V6.22', folder: 'D:\STM32softwore\Keil_v5\ARM\ARMCLANG\Bin'
+Build target 'DDS2'
+compiling ADCFunction.c...
+linking...
+Program Size: Code=36700 RO-data=12604 RW-data=4160 ZI-data=28296  
+FromELF: creating hex file...
+"DDS2\DDS2.axf" - 0 Error(s), 0 Warning(s).
+Build Time Elapsed:  00:00:07
