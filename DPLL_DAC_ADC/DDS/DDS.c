@@ -1,27 +1,29 @@
 #include "DDS.h"
 
+uint16_t pData[WAVE_POINT]={0};
+uint16_t Sine_WAVE[WAVE_POINT];
+uint32_t place=0;
+uint32_t ctrl_word=0;
+uint32_t phase_word=0;
+uint8_t phaseFlag=1;
 
-#define TABLE_SIZE 256
-uint16_t sine_table[TABLE_SIZE];
-
-
-#define F_CLK     1000000  // DAC触发频率 1MHz
-#define TABLE_SIZE 256
-
-volatile uint32_t phase_acc = 0;
-volatile uint32_t phase_step = 0;
-uint16_t waveform_table[TABLE_SIZE];  // 可选正弦/三角波表
-
-void DDS_SetFrequency(uint32_t freq) 
+void SineWave_Data(uint16_t num, uint16_t* D, float U)//正弦波生成波表代码
 {
-    phase_step = ((uint64_t)freq << 32) / F_CLK;
-}
+ 	num++;
+     uint16_t i;
+     U=U/2;
+     for (i = 0; i < num-1; i++)
+     {
+        D[i] = (uint16_t)((U*sin((1.0 * i / (num - 1)) * 2 * 3.1415926) + U) * 4095 / 3.3)+300;
+     }
+}	
 
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    if (htim->Instance == TIM4)
-		{
-        phase_acc += phase_step;
-        uint16_t index = phase_acc >> (32 - 8); // 高8位查表
-        HAL_DAC_SetValue(&hdac1, DAC_CHANNEL_1, DAC_ALIGN_12B_R, waveform_table[index]);
-    }
+void phaseChange(float phase)//相位改变代码
+{
+ 	phase_word=phase/360*4294967295;
+ 	if(phaseFlag==1)
+ 	{
+ 		phaseFlag=0;
+ 		place+=phase_word;
+ 	}
 }

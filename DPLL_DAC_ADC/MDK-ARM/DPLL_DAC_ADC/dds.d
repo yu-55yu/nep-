@@ -32,4 +32,4 @@ dpll_dac_adc/dds.o: ..\DDS\DDS.c ..\DDS\DDS.h ..\Core\Inc\main.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_tim_ex.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart.h \
   ..\Drivers\STM32H7xx_HAL_Driver\Inc\stm32h7xx_hal_uart_ex.h \
-  ..\Typedefine\type.h ..\Core\Inc\adc.h
+  ..\Typedefine\type.h ..\Core\Inc\tim.h ..\Core\Inc\dac.h

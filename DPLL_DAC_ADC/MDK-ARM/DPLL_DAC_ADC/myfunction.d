@@ -59,4 +59,4 @@ dpll_dac_adc/myfunction.o: ..\MyFunction\MyFunction.c \
   D:\STM32softwore\Arm\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_const_structs.h \
   D:\STM32softwore\Arm\Packs\ARM\CMSIS-DSP\1.16.2\Include\arm_common_tables.h \
   ..\Typedefine\type.h ..\DACFunction\DACFunction.h ..\Core\Inc\tim.h \
-  ..\Core\Inc\dac.h ..\DDS\DDS.h ..\Core\Inc\adc.h
+  ..\Core\Inc\dac.h ..\DDS\DDS.h
