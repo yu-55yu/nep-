@@ -1,29 +1,84 @@
 #include "DDS.h"
 
-uint16_t pData[WAVE_POINT]={0};
-uint16_t Sine_WAVE[WAVE_POINT];
-uint32_t place=0;
-uint32_t ctrl_word=0;
-uint32_t phase_word=0;
-uint8_t phaseFlag=1;
+//------------------------------------------------------------------------------
 
-void SineWave_Data(uint16_t num, uint16_t* D, float U)//正弦波生成波表代码
-{
- 	num++;
-     uint16_t i;
-     U=U/2;
-     for (i = 0; i < num-1; i++)
-     {
-        D[i] = (uint16_t)((U*sin((1.0 * i / (num - 1)) * 2 * 3.1415926) + U) * 4095 / 3.3)+300;
-     }
-}	
 
-void phaseChange(float phase)//相位改变代码
+uint32_t place[2]={0};
+uint32_t ctrl_word[2]={0};
+uint32_t phase_word[2]={0};
+uint8_t phaseFlag[2]={1};
+float phase[2]={0.f};
+
+uint16_t pData1[WAVE_POINT]={0};
+uint16_t pData2[WAVE_POINT]={0};
+
+
+//channal 0: DAC_CHANNEL_1
+//channal 1: DAC_CHANNEL_2
+void phaseChange(float phase,int Channal)//相位改变代码
 {
- 	phase_word=phase/360*4294967295;
- 	if(phaseFlag==1)
+ 	phase_word[Channal]=(uint32_t)(phase/360.0*4294967295);
+ 	if(phaseFlag[Channal]==1)
  	{
- 		phaseFlag=0;
- 		place+=phase_word;
+ 		phaseFlag[Channal]=0;
+ 		place[Channal]+=phase_word[Channal];
  	}
+}
+//---------------------------------------------------------------------------------------------------------
+
+
+
+uint16_t DAC_Buffer1[WAVE_POINT];
+uint16_t DAC_Buffer2[WAVE_POINT];
+
+#define PI 3.14159265358979f
+#define AMP_MAX 4095
+uint16_t triangle_wave[WAVE_POINT];
+uint16_t square_wave[WAVE_POINT];
+uint16_t sine_wave[WAVE_POINT];
+extern Signal Wave[2];
+
+void Generate_Waves(void){
+    for (int i = 0; i < WAVE_POINT; i++) {
+        // 生成三角波（0 到 4095，再回到 0）
+        if (i < WAVE_POINT / 2) {
+            triangle_wave[i] = (uint16_t)((2.0 * AMP_MAX * i) / WAVE_POINT);
+        } else {
+            triangle_wave[i] = (uint16_t)((2.0 * AMP_MAX * (WAVE_POINT - i)) / WAVE_POINT);
+        }
+
+
+        // 生成方波（前半 4095，后半 0）
+        square_wave[i] = (i < WAVE_POINT / 2) ? AMP_MAX : 0;
+
+        // 生成正弦波（0 到 4095）
+        sine_wave[i] = (uint16_t)((sin((2.0 * PI * i) / WAVE_POINT) + 1) * (AMP_MAX / 2));
+    }
+}
+
+void DDS_SetWaveform(Signal Waves, int Channel) {
+    uint16_t *waveform = NULL;
+    waveform = Waves.Type == TRIANGLE ? triangle_wave : sine_wave;
+		float AmpWord = Waves.VPP/3000.0;
+
+    if (Channel == 0) {
+        for (int i = 0; i < WAVE_POINT; i++) {
+            DAC_Buffer1[i] = waveform[i]*AmpWord;
+        }
+    } else if (Channel == 1) {
+        for (int i = 0; i < WAVE_POINT; i++) {
+            DAC_Buffer2[i] = waveform[i]*AmpWord;
+        }
+    }
+}
+
+
+
+
+void DDS_SetParameter(Signal wave[]) {
+	for(int i=0; i<2; i++)
+	{
+		ctrl_word[i]=Wave[i].Freq*OF;//频率控制字
+		DDS_SetWaveform(Wave[i],i);//设置波形
+	}
 }

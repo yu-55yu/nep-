@@ -40,10 +40,6 @@ uint16_t SquareWave[100] = {
 };
 
 
-uint16_t DAC_Buffer1[100];
-uint16_t DAC_Buffer2[100];
-
-
 
 //设置DAC输出波频率
 void Frequency_Set(float Frequency,uint32_t Channel)//修改频率

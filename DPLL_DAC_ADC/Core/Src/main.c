@@ -51,13 +51,6 @@
 
 /* USER CODE BEGIN PV */
 
-extern uint16_t pData[WAVE_POINT];
-extern uint16_t Sine_WAVE[WAVE_POINT];
-extern uint32_t place;
-extern uint32_t ctrl_word;
-extern uint32_t phase_word;
-extern uint8_t phaseFlag;
-float phase=0; //相位
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -73,14 +66,22 @@ void SystemClock_Config(void);
 
 
 //数组
-
+extern uint32_t place[2];
+extern uint32_t ctrl_word[2];
+extern uint32_t phase_word[2];
+extern uint8_t phaseFlag[2];
+extern uint16_t ADC_Buffer[ADC_LEN];
+extern Signal Wave[2];
+extern uint16_t DAC_Buffer1[WAVE_POINT];
+extern uint16_t DAC_Buffer2[WAVE_POINT];
+extern uint16_t pData1[WAVE_POINT];
+extern uint16_t pData2[WAVE_POINT];
+extern float phase[2]; //相位
 
 //一些标志位
 uint8_t ADC_ConvEndFlag = 0; // ADC转换完成 在HAL_ADC_ConvCpltCallback中断中置位
 
 extern DAC_HandleTypeDef hdac1;
-extern uint16_t ADC_Buffer[ADC_LEN];
-extern Signal Wave[2];
 
 /* USER CODE END 0 */
 
@@ -124,13 +125,12 @@ int main(void)
   HAL_TIM_Base_Start(&htim3);
 	HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
 	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)ADC_Buffer,ADC_LEN);
+	
+	
 		HAL_TIM_Base_Start(&htim5);
 		HAL_TIM_Base_Start(&htim4);
-   // generate_waves();
-
-
-
-    SineWave_Data(WAVE_POINT,Sine_WAVE,2);//生成正弦波数组**
+   
+    Generate_Waves(); 
 
 			
   /* USER CODE END 2 */
@@ -142,17 +142,17 @@ int main(void)
     if(ADC_ConvEndFlag)
     {
       ADC_ConvEndFlag=0; //清除标志位
-     // DDS_SetFrequency(Wave[0].Freq, DAC_CHANNEL_1); //设置频率
-     // DDS_SetFrequency(Wave[1].Freq, DAC_CHANNEL_2); //设置频率
-     // DDS_SetWaveform(Wave[0], DAC_CHANNEL_1); //设置波形
-     // DDS_SetWaveform(Wave[1], DAC_CHANNEL_2); //设置波形
-      ctrl_word=Wave[0].Freq*OF;//频率控制字
-      HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)pData,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
+			 DDS_SetParameter(Wave);//设置波形参数
+      //HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)pData1,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
+       HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_2, (uint32_t*)pData2,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
     }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    phaseChange(phase);//更改相位
+    //for(int i=0; i<2;i++)
+    //{
+    //  phaseChange(phase[i], i);
+    //}
   }
   /* USER CODE END 3 */
 }
@@ -237,19 +237,43 @@ void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
 {
   for(uint16_t i=0;i<WAVE_POINT/2;i++)
   {
-    pData[i]=Sine_WAVE[place>>(32-N)];
-    place+=ctrl_word;
+    pData1[i]=DAC_Buffer1[place[0]>>(32-N)];
+    place[0]+=ctrl_word[0];
   }
+
 }
 
 void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
 {
   for(uint16_t i=WAVE_POINT/2;i<WAVE_POINT;i++)
   {
-    pData[i]=Sine_WAVE[place>>(32-N)];
-    place+=ctrl_word;
+    pData1[i]=DAC_Buffer1[place[0]>>(32-N)];
+    place[0]+=ctrl_word[0];
   }
 }
+
+
+
+void HAL_DACEx_ConvHalfCpltCallbackCh2(DAC_HandleTypeDef* hdac)
+{
+  for(uint16_t i=0;i<WAVE_POINT/2;i++)
+  {
+    pData2[i]=DAC_Buffer2[place[1]>>(32-N)];
+    place[1]+=ctrl_word[1];
+  }
+}
+
+
+void HAL_DACEx_ConvCpltCallbackCh2(DAC_HandleTypeDef* hdac)
+{
+	for(uint16_t i=WAVE_POINT/2;i<WAVE_POINT;i++)
+  {
+    pData2[i]=DAC_Buffer2[place[1]>>(32-N)];
+    place[1]+=ctrl_word[1];
+  }
+}
+
+
 
 /* USER CODE END 4 */
 

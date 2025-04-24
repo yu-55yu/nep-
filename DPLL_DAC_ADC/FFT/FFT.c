@@ -130,6 +130,7 @@ void ADC_FFT_Get_Wave_Mes(uint32_t Row,float Fs,float *VPP,float *Freq,int corre
 
 //这个是具体题目的要求--------------------------------------------------------------------------------------
 /* 找到幅值最大的两个频率分量下标（基波） */
+/* 找到幅值最大的两个频率分量下标（基波），并确保它们至少相差 3 */
 void Find_2BaseIndex(void)
 {
     float max1 = 0, max2 = 0;
@@ -143,7 +144,7 @@ void Find_2BaseIndex(void)
             idx2 = idx1;
             max1 = val;
             idx1 = i;
-        } else if (val > max2) {
+        } else if (val > max2 && (i - idx1) >= 3) { // 确保 idx2 与 idx1 至少相差 3
             max2 = val;
             idx2 = i;
         }
