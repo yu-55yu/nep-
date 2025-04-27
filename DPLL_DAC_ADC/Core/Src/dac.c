@@ -64,7 +64,6 @@ void MX_DAC1_Init(void)
 
   /** DAC channel OUT2 config
   */
-  sConfig.DAC_Trigger = DAC_TRIGGER_T5_TRGO;
   if (HAL_DAC_ConfigChannel(&hdac1, &sConfig, DAC_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
@@ -117,7 +116,7 @@ void HAL_DAC_MspInit(DAC_HandleTypeDef* dacHandle)
     __HAL_LINKDMA(dacHandle,DMA_Handle1,hdma_dac1_ch1);
 
     /* DAC1_CH2 Init */
-    hdma_dac1_ch2.Instance = DMA1_Stream2;
+    hdma_dac1_ch2.Instance = DMA2_Stream1;
     hdma_dac1_ch2.Init.Request = DMA_REQUEST_DAC2;
     hdma_dac1_ch2.Init.Direction = DMA_MEMORY_TO_PERIPH;
     hdma_dac1_ch2.Init.PeriphInc = DMA_PINC_DISABLE;

@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+  /**
+    ******************************************************************************
+    * @file           : main.c
+    * @brief          : Main program body
+    ******************************************************************************
+    * @attention
+    *
+    * Copyright (c) 2025 STMicroelectronics.
+    * All rights reserved.
+    *
+    * This software is licensed under terms that can be found in the LICENSE file
+    * in the root directory of this software component.
+    * If no LICENSE file comes with this software, it is provided AS-IS.
+    *
+    ******************************************************************************
+    */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -28,8 +28,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "MyFunction.h"
-#include "stdio.h"
+  #include "MyFunction.h"
+  #include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,24 +65,26 @@ void SystemClock_Config(void);
 
 
 
-//数组
-extern uint32_t place[2];
-extern uint32_t ctrl_word[2];
-extern uint32_t phase_word[2];
-extern uint8_t phaseFlag[2];
-extern uint16_t ADC_Buffer[ADC_LEN];
-extern Signal Wave[2];
-extern uint16_t DAC_Buffer1[WAVE_POINT];
-extern uint16_t DAC_Buffer2[WAVE_POINT];
-extern uint16_t pData1[WAVE_POINT];
-extern uint16_t pData2[WAVE_POINT];
-extern float phase[2]; //相位
+  //数组
+  extern uint32_t place1;
+  extern uint32_t place2;
+  extern uint32_t ctrl_word1;
+  extern uint32_t ctrl_word2;
+  extern uint32_t phase_word[2];
+  extern uint8_t phaseFlag[2];
+  extern uint16_t ADC_Buffer[ADC_LEN];
+  extern Signal Wave[2];
+  extern uint16_t DAC_Buffer1[WAVE_POINT];
+  extern uint16_t DAC_Buffer2[WAVE_POINT];
+  extern uint16_t pData1[WAVE_POINT];
+  extern uint16_t pData2[WAVE_POINT];
+  extern float phase[2]; //相位
 
-//一些标志位
-uint8_t ADC_ConvEndFlag = 0; // ADC转换完成 在HAL_ADC_ConvCpltCallback中断中置位
+  //一些标志位
+  uint8_t ADC_ConvEndFlag = 0; // ADC转换完成 在HAL_ADC_ConvCpltCallback中断中置位
 
-extern DAC_HandleTypeDef hdac1;
-
+  extern DAC_HandleTypeDef hdac1;
+	
 /* USER CODE END 0 */
 
 /**
@@ -119,41 +121,39 @@ int main(void)
   MX_DAC1_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_TIM5_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim3);
-	HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
-	HAL_ADC_Start_DMA(&hadc1,(uint32_t*)ADC_Buffer,ADC_LEN);
-	
-	
-		HAL_TIM_Base_Start(&htim5);
-		HAL_TIM_Base_Start(&htim4);
-   
-    Generate_Waves(); 
+    HAL_TIM_Base_Start(&htim3);
+    HAL_ADCEx_Calibration_Start(&hadc1, ADC_CALIB_OFFSET, ADC_SINGLE_ENDED);
+    HAL_ADC_Start_DMA(&hadc1,(uint32_t*)ADC_Buffer,ADC_LEN);
 
-			
+					//	        HAL_TIM_Base_Start(&htim5);
+    
+      Generate_Waves(); 
+
+        
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    if(ADC_ConvEndFlag)
+    while (1)
     {
-      ADC_ConvEndFlag=0; //清除标志位
-			 DDS_SetParameter(Wave);//设置波形参数
-      //HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)pData1,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
-       HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_2, (uint32_t*)pData2,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
-    }
+      if(ADC_ConvEndFlag)
+      {
+        ADC_ConvEndFlag=0; //清除标志位
+				Signal_Separation();
+        DDS_SetParameter(Wave);//设置波形参数
+
+
+        HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)pData1,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
+        HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_2, (uint32_t*)pData2,  WAVE_POINT, DAC_ALIGN_12B_R);//使能DAC
+			  HAL_TIM_Base_Start(&htim4);
+      }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    //for(int i=0; i<2;i++)
-    //{
-    //  phaseChange(phase[i], i);
-    //}
-  }
+
+    }
   /* USER CODE END 3 */
 }
 
@@ -221,57 +221,40 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) 
-{
-if (hadc==&hadc1) 
+  void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) 
   {
-    UNUSED(hadc);
-    HAL_ADC_Stop(hadc);
-    ADC_ConvEndFlag = 1;
-    Signal_Separation();
-  }
-}
-
-
-void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
-{
-  for(uint16_t i=0;i<WAVE_POINT/2;i++)
-  {
-    pData1[i]=DAC_Buffer1[place[0]>>(32-N)];
-    place[0]+=ctrl_word[0];
+  if (hadc==&hadc1) 
+    {
+      UNUSED(hadc);
+      HAL_ADC_Stop(hadc);
+      ADC_ConvEndFlag = 1;
+    }
   }
 
-}
 
-void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
-{
-  for(uint16_t i=WAVE_POINT/2;i<WAVE_POINT;i++)
+  void HAL_DAC_ConvHalfCpltCallbackCh1(DAC_HandleTypeDef *hdac)
   {
-    pData1[i]=DAC_Buffer1[place[0]>>(32-N)];
-    place[0]+=ctrl_word[0];
+    for(uint16_t i=0;i<WAVE_POINT/2;i++)
+    {
+      pData1[i]=DAC_Buffer1[place1>>21];
+      pData2[i]=DAC_Buffer2[place2>>21];
+      place1+=ctrl_word1;
+      place2+=ctrl_word2;
+    }
+
   }
-}
 
-
-
-void HAL_DACEx_ConvHalfCpltCallbackCh2(DAC_HandleTypeDef* hdac)
-{
-  for(uint16_t i=0;i<WAVE_POINT/2;i++)
+  void HAL_DAC_ConvCpltCallbackCh1(DAC_HandleTypeDef *hdac)
   {
-    pData2[i]=DAC_Buffer2[place[1]>>(32-N)];
-    place[1]+=ctrl_word[1];
+    for(uint16_t i=WAVE_POINT/2;i<WAVE_POINT;i++)
+    {
+      pData1[i]=DAC_Buffer1[place1>>21];
+      pData2[i]=DAC_Buffer2[place2>>21];
+      place1+=ctrl_word1;
+      place2+=ctrl_word2;
+    }
+		
   }
-}
-
-
-void HAL_DACEx_ConvCpltCallbackCh2(DAC_HandleTypeDef* hdac)
-{
-	for(uint16_t i=WAVE_POINT/2;i<WAVE_POINT;i++)
-  {
-    pData2[i]=DAC_Buffer2[place[1]>>(32-N)];
-    place[1]+=ctrl_word[1];
-  }
-}
 
 
 
@@ -284,11 +267,11 @@ void HAL_DACEx_ConvCpltCallbackCh2(DAC_HandleTypeDef* hdac)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
-  __disable_irq();
-  while (1)
-  {
-  }
+    /* User can add his own implementation to report the HAL error return state */
+    __disable_irq();
+    while (1)
+    {
+    }
   /* USER CODE END Error_Handler_Debug */
 }
 
@@ -303,8 +286,8 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* User can add his own implementation to report the file name and line number,
+      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

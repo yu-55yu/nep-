@@ -37,7 +37,6 @@
 "dpll_dac_adc\system_stm32h7xx.o"
 "dpll_dac_adc\fft.o"
 "dpll_dac_adc\myfunction.o"
-"dpll_dac_adc\dacfunction.o"
 "dpll_dac_adc\dds.o"
 "dpll_dac_adc\basicmathfunctions.o"
 "dpll_dac_adc\basicmathfunctionsf16.o"

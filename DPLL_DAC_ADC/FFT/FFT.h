@@ -18,3 +18,4 @@ void Find_BaseIndex(void);
 void Find_Harmonics(void);
 void Find_2BaseIndex(void);
 SignalType Detect_WaveType(int BaseIdx);
+

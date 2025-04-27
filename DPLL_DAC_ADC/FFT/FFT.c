@@ -171,3 +171,6 @@ SignalType Detect_WaveType(int BaseIdx)
       return SINE;
   }
 }
+
+
+

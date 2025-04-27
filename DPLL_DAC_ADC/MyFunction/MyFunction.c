@@ -35,8 +35,7 @@ void Signal_Separation(void)
 }
 
 
-
-
+/*
 //设好波的所有参数
 void Show_Waves(Signal Wave, uint32_t Channel)
 {
@@ -64,6 +63,6 @@ void Show_Waves(Signal Wave, uint32_t Channel)
 		//HAL_DAC_Start_DMA(&hdac1, Channel, (uint32_t *)DAC_Buffer2, 100, DAC_ALIGN_12B_R);
 	}
 }
-
+*/
 
 

@@ -3,8 +3,11 @@
 //------------------------------------------------------------------------------
 
 
-uint32_t place[2]={0};
-uint32_t ctrl_word[2]={0};
+uint32_t place1;
+uint32_t place2;
+
+uint32_t ctrl_word1;
+uint32_t ctrl_word2;
 uint32_t phase_word[2]={0};
 uint8_t phaseFlag[2]={1};
 float phase[2]={0.f};
@@ -15,15 +18,15 @@ uint16_t pData2[WAVE_POINT]={0};
 
 //channal 0: DAC_CHANNEL_1
 //channal 1: DAC_CHANNEL_2
-void phaseChange(float phase,int Channal)//相位改变代码
-{
- 	phase_word[Channal]=(uint32_t)(phase/360.0*4294967295);
- 	if(phaseFlag[Channal]==1)
- 	{
- 		phaseFlag[Channal]=0;
- 		place[Channal]+=phase_word[Channal];
- 	}
-}
+// void phaseChange(float phase,int Channal)//相位改变代码
+// {
+//  	phase_word[Channal]=(uint32_t)(phase/360.0*4294967295);
+//  	if(phaseFlag[Channal]==1)
+//  	{
+//  		phaseFlag[Channal]=0;
+//  		phase[Channal]+=phase_word[Channal];
+//  	}
+// }
 //---------------------------------------------------------------------------------------------------------
 
 
@@ -76,9 +79,11 @@ void DDS_SetWaveform(Signal Waves, int Channel) {
 
 
 void DDS_SetParameter(Signal wave[]) {
+	ctrl_word1=Wave[0].Freq*OF;//频率控制字
+    ctrl_word2=Wave[1].Freq*OF;//频率控制字
+
 	for(int i=0; i<2; i++)
 	{
-		ctrl_word[i]=Wave[i].Freq*OF;//频率控制字
 		DDS_SetWaveform(Wave[i],i);//设置波形
 	}
 }

@@ -7,11 +7,11 @@
 #include "dac.h"
 
 
-#define N 10
-#define  WAVE_POINT  1024
-#define OF 2147.483648/2 //2的32次方除以1M
+#define N 11
+#define  WAVE_POINT  2048 //4096点波形
+#define OF 2147.483648*2/3 //2的32次方除以1M
 
-void phaseChange(float phase,int Channal);//相位改变代码
+// void phaseChange(float phase,int Channal);//相位改变代码
 
 
 

@@ -60,6 +60,7 @@ void Frequency_Set(float Frequency,uint32_t Channel)//修改频率
 	}
 }
 
+
 //amp是幅值，范围0-3V
 void Amp_Set(float Amp,uint32_t Channel,uint16_t *WaveData)//修改幅值
 {

@@ -8,4 +8,4 @@
 #define Fs 1000000 // ADC²ÉÑùÆµÂÊ
 
 void Signal_Separation(void);
-void Show_Waves(Signal Wave, uint32_t Channel);
+//void Show_Waves(Signal Wave, uint32_t Channel);
