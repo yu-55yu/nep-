@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "fft.h": "c",
+        "dds.h": "c",
+        "myfunction.h": "c"
+    }
+}
